@@ -37,11 +37,11 @@ public abstract class Gui implements InventoryHolder {
 	private final InventoryType inventoryType;
 	public final Player player;
 	private Inventory inventory;
-	private String title;
+	private Component title;
 	private int size;
 	private boolean isClosed = false;
 
-	public Gui(@Nonnull Player player, @Nonnull String id, String title, @Nonnegative int rows) {
+	public Gui(@Nonnull Player player, @Nonnull String id, Component title, @Nonnegative int rows) {
 		this.registeredIcons = new HashMap<>(rows * 9);
 		this.player = player;
 		this.size = rows * 9;
@@ -50,7 +50,7 @@ public abstract class Gui implements InventoryHolder {
 		this.inventoryType = InventoryType.CHEST;
 	}
 
-	public Gui(@Nonnull Player player, @Nonnull String id, String title, InventoryType inventoryType) {
+	public Gui(@Nonnull Player player, @Nonnull String id, Component title, InventoryType inventoryType) {
 		this.registeredIcons = new HashMap<>(inventoryType.getDefaultSize());
 		this.player = player;
 		this.size = inventoryType.getDefaultSize();
@@ -59,12 +59,12 @@ public abstract class Gui implements InventoryHolder {
 		this.inventoryType = inventoryType;
 	}
 
-	public Gui(@Nonnull Player player, @Nonnull String id, Component title, @Nonnegative int rows) {
-		this(player, id, NMSUtil.LEGACY.serialize(title), rows);
+	public Gui(@Nonnull Player player, @Nonnull String id, String title, @Nonnegative int rows) {
+		this(player, id, Component.text(title), rows);
 	}
 
-	public Gui(@Nonnull Player player, @Nonnull String id, Component title, InventoryType inventoryType) {
-		this(player, id, NMSUtil.LEGACY.serialize(title), inventoryType);
+	public Gui(@Nonnull Player player, @Nonnull String id, String title, InventoryType inventoryType) {
+		this(player, id, Component.text(title), inventoryType);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public abstract class Gui implements InventoryHolder {
 	}
 
 	@Nullable
-	public String getTitle() {
+	public Component getTitle() {
 		return this.title;
 	}
 
@@ -315,7 +315,15 @@ public abstract class Gui implements InventoryHolder {
 	 * @param title new title
 	 */
 	public void setTitle(String title) {
+
+		this.title = Component.text(title);
+
+	}
+
+	public void setTitle(Component title) {
+
 		this.title = title;
+
 	}
 
 	/**
@@ -323,7 +331,7 @@ public abstract class Gui implements InventoryHolder {
 	 *
 	 * @param title new title
 	 */
-	public void sendTitleUpdate(@Nonnull String title) {
+	public void sendTitleUpdate(@Nonnull Component title) {
 		this.title = Objects.requireNonNull(title, "title cannot be null!");
 		this.open();
 	}
@@ -434,7 +442,7 @@ public abstract class Gui implements InventoryHolder {
 	 * @param title Requested inventory title.
 	 * @return Created inventory.
 	 */
-	protected Inventory createInventory(InventoryHolder owner, int size, String title) {
+	protected Inventory createInventory(InventoryHolder owner, int size, Component title) {
 		return Bukkit.createInventory(owner, size, title);
 	}
 
@@ -448,7 +456,7 @@ public abstract class Gui implements InventoryHolder {
 	 * @param title Requested inventory title.
 	 * @return Created inventory.
 	 */
-	protected Inventory createInventory(InventoryHolder owner, InventoryType type, String title) {
+	protected Inventory createInventory(InventoryHolder owner, InventoryType type, Component title) {
 		return Bukkit.createInventory(owner, type, title);
 	}
 

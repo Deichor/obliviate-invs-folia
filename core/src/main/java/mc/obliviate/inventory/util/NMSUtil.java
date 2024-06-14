@@ -9,7 +9,7 @@ public class NMSUtil {
     public static final boolean IS_PAPER = isPaper();
     public static final boolean CAN_USE_COMPONENTS = ServerVersionController.isServerVersionAtLeast(ServerVersionController.V1_16) && IS_PAPER;
     public static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
-            .build();
+            .hexColors().useUnusualXRepeatedCharacterHexFormat().build();
 
     private static boolean isPaper() {
         try {
