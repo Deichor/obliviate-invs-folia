@@ -21,7 +21,7 @@ public class ConfigurableGuiCache {
         ConfigurableGuiCache.CONFIGURABLE_GUI_CACHES.put(guiId, newCache);
         return newCache;
     }
-
+//test
     public static void resetCaches() {
         for (ConfigurableGuiCache cache : ConfigurableGuiCache.CONFIGURABLE_GUI_CACHES.values()) {
             cache.itemStackCache.clear();
