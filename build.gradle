@@ -14,10 +14,6 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
-tasks.withType(JavaCompile) {
-    options.release.set(21)
-}
-
 tasks.jar {
     enabled = false
 }
@@ -36,10 +32,6 @@ subprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.release.set(21)
     }
 
     repositories {
