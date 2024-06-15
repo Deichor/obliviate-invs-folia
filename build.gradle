@@ -32,11 +32,20 @@ subprojects {
     version rootProject.version
     compileJava.options.encoding = 'UTF-8'
 
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.release.set(21)
+    }
+
     repositories {
         mavenCentral()
         mavenLocal()
         maven { url 'https://repo.maven.apache.org/maven2/' }
-        maven { url 'https://repo.codemc.org/repository/nms/' }
         maven { url 'https://jitpack.io' }
         maven { url 'https://repo.papermc.io/repository/maven-public/'}
     }
