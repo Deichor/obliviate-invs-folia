@@ -7,8 +7,13 @@ plugins {
 
 group 'mc.obliviate'
 version '4.1.13.1'
-sourceCompatibility = 21
 compileJava.options.encoding = 'UTF-8'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 tasks.jar {
     enabled = false
@@ -22,7 +27,6 @@ subprojects {
 
     group rootProject.group
     version rootProject.version
-    sourceCompatibility = 21
     compileJava.options.encoding = 'UTF-8'
 
     repositories {
