@@ -142,7 +142,7 @@ public class ItemStackSerializer {
         if (section.getBoolean(table.getGlowSectionName())) {
             meta.getItemFlags().add(ItemFlag.HIDE_ENCHANTS);
             if (meta.getEnchants().isEmpty()) {
-                meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+                meta.addEnchant(Enchantment.PROTECTION, 1, true);
             }
         }
         item.setItemMeta(meta);
