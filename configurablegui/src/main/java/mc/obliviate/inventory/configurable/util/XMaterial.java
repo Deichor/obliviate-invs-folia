@@ -29,8 +29,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
-import org.bukkit.potion.Potion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1841,17 +1841,9 @@ public enum XMaterial {
         // Versions 1.9-1.12 didn't really use the items data value.
         if (supports(9) && !supports(13) && item.hasItemMeta() && material.equals("MONSTER_EGG")) {
             ItemMeta meta = item.getItemMeta();
-            if (meta instanceof SpawnEggMeta) {
-                SpawnEggMeta egg = (SpawnEggMeta) meta;
-                material = egg.getSpawnedType().name() + "_SPAWN_EGG";
+            if (meta instanceof SpawnEggMeta egg) {
+                material = Objects.requireNonNull(egg.getSpawnedEntity()).getEntityType().name() + "_SPAWN_EGG";
             }
-        }
-
-        // Potions used the items data value to store
-        // information about the type of potion in 1.8
-        if (!supports(9) && material.endsWith("ION")) {
-            // There's also 16000+ data value technique, but this is more reliable.
-            return Potion.fromItemStack(item).isSplash() ? SPLASH_POTION : POTION;
         }
 
         // Refer to the enum for info.
@@ -2161,7 +2153,7 @@ public enum XMaterial {
     /**
      * The data value of this material <a href="https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening">pre-flattening</a>.
      * <p>
-     * Can be accessed with {@link ItemStack#getData()} then {@code MaterialData#getData()}
+     * Can be accessed with {@link ItemStack()} then {@code MaterialData#getData()}
      * or {@link ItemStack#getDurability()} if not damageable.
      *
      * @return data of this material, or 0 if none.
