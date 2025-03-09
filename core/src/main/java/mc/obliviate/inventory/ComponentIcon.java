@@ -76,17 +76,8 @@ public class ComponentIcon implements GuiIcon {
 		final ItemMeta meta = icon.getItem().getItemMeta();
 		if (meta == null) return this;
 
-		if (NMSUtil.CAN_USE_COMPONENTS) {
-			try {
-				final List<String> list = lore.stream().map(SERIALIZER::serialize).collect(Collectors.toList());
-				LORE_FIELD.set(meta, list);
-			} catch (IllegalAccessException exception) {
-				exception.printStackTrace();
-				throw new RuntimeException("Could not set lore, please report this to the plugin developer!");
-			}
-		}
+		meta.lore(lore);
 
-		meta.setLore(lore.stream().map(NMSUtil.LEGACY::serialize).collect(Collectors.toList()));
 		icon.getItem().setItemMeta(meta);
 		return this;
 	}
@@ -100,18 +91,10 @@ public class ComponentIcon implements GuiIcon {
 	@Nonnull
 	public ComponentIcon setName(final Component name) {
 		final ItemMeta meta = icon.getItem().getItemMeta();
+
 		if (meta == null) return this;
+		meta.displayName(name);
 
-		if (NMSUtil.CAN_USE_COMPONENTS) {
-			try {
-				DISPLAY_NAME_FIELD.set(meta, SERIALIZER.serialize(name));
-			} catch (IllegalAccessException exception) {
-				exception.printStackTrace();
-				throw new RuntimeException("Could not set displayName, please report this to the plugin developer!");
-			}
-		}
-
-		meta.setDisplayName(NMSUtil.LEGACY.serialize(name));
 		icon.getItem().setItemMeta(meta);
 		return this;
 	}
@@ -138,28 +121,13 @@ public class ComponentIcon implements GuiIcon {
 		final ItemMeta meta = icon.getItem().getItemMeta();
 		if (meta == null) return this;
 
-		if (NMSUtil.CAN_USE_COMPONENTS) {
-			try {
-				final List<String> loreComponents = (List<String>) LORE_FIELD.get(meta);
+		List<Component> list = meta.lore();
+		if (list != null) list.addAll(lore);
+		else list = lore;
 
-				List<Component> list = (loreComponents == null) ? new ArrayList<>() : loreComponents.stream()
-						.map(SERIALIZER::deserialize).collect(Collectors.toList());
-				list.addAll(lore);
+		meta.lore(list);
 
-				return setLore(list);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				throw new RuntimeException("Could not append lore. Please report this to the plugin developer!");
-			}
-		}
-
-		List<String> serialized = lore.stream().map(NMSUtil.LEGACY::serialize).collect(Collectors.toList());
-		List<String> list = meta.getLore();
-		if (list != null) list.addAll(serialized);
-		else list = serialized;
-
-		// no need to re-call the component based method just call the legacy one
-		icon.setLore(list);
+		icon.getItem().setItemMeta(meta);
 		return this;
 	}
 
@@ -187,41 +155,13 @@ public class ComponentIcon implements GuiIcon {
 		final ItemMeta meta = icon.getItem().getItemMeta();
 		if (meta == null) return this;
 
-		if (NMSUtil.CAN_USE_COMPONENTS) {
-			try {
-				final List<String> loreComponents = (List<String>) LORE_FIELD.get(meta);
+		List<Component> list = meta.lore();
+		if (list != null) list.addAll(index, newLines);
+		else list = newLines;
 
-				List<Component> list = (loreComponents == null) ? new ArrayList<>() : loreComponents.stream()
-						.map(SERIALIZER::deserialize).collect(Collectors.toList());
-				list.addAll(index, newLines);
+		meta.lore(list);
 
-				return setLore(list);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				throw new RuntimeException("Could not append lore. Please report this to the plugin developer!");
-			}
-		}
-
-		List<String> serialized = newLines.stream().map(NMSUtil.LEGACY::serialize).collect(Collectors.toList());
-		List<String> list = meta.getLore();
-		if (list != null) list.addAll(index, serialized);
-		else list = serialized;
-
-		// no need to re-call the component based method just call the legacy one
-		icon.setLore(list);
-		return this;
-	}
-
-	/**
-	 * sets durability of icon
-	 *
-	 * @param newDamage durability
-	 * @return this
-	 */
-	@SuppressWarnings("deprecation")
-	@Nonnull
-	public ComponentIcon setDurability(final short newDamage) {
-		this.icon.setDurability(newDamage);
+		icon.getItem().setItemMeta(meta);
 		return this;
 	}
 

@@ -2,20 +2,18 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
 }
 
 group 'mc.obliviate'
-version '4.1.13.1'
+version '4.1.13.2'
 compileJava.options.encoding = 'UTF-8'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-tasks.jar {
-    enabled = false
 }
 
 subprojects {
@@ -38,26 +36,23 @@ subprojects {
         mavenCentral()
         mavenLocal()
         maven { url 'https://repo.maven.apache.org/maven2/' }
-        maven { url 'https://jitpack.io' }
         maven { url 'https://repo.papermc.io/repository/maven-public/'}
     }
 
     publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = project.group
-                version = project.version
-                artifactId = project.name
-                from components.java
+        repositories {
+            maven {
+                name = "reposilite"
+                url = uri("https://repo.oyunzor.com/")
+                credentials {
+                    username = env.fetchOrNull("REPOSILITE_USERNAME") ?: System.getenv("USERNAME")
+                    password = env.fetchOrNull("REPOSILITE_TOKEN") ?: System.getenv("TOKEN")
+                }
             }
         }
     }
 
     artifacts.archives(tasks.shadowJar)
-
-    tasks.jar {
-        enabled = true
-    }
 
     tasks.shadowJar {
         archiveFileName.set(project.name + "-" + project.version + ".jar")

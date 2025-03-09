@@ -3,7 +3,6 @@ package mc.obliviate.inventory;
 import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.google.common.base.Preconditions;
 import mc.obliviate.inventory.event.customclosevent.FakeInventoryCloseEvent;
-import mc.obliviate.inventory.util.NMSUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
