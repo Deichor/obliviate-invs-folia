@@ -1,8 +1,6 @@
-var adventure = "4.17.0"
 dependencies {
     compileOnly project(':core')
     compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
-    compileOnly "net.kyori:adventure-api:$adventure"
     implementation 'com.github.hamza-cskn:obliviate-utils:2.0.5'
 }
 

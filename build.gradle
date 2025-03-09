@@ -37,13 +37,33 @@ subprojects {
         mavenLocal()
         maven { url 'https://repo.maven.apache.org/maven2/' }
         maven { url 'https://repo.papermc.io/repository/maven-public/'}
+        maven { url 'https://jitpack.io' }
+    }
+
+    tasks.shadowJar {
+        archiveFileName.set(project.name + "-" + project.version + ".jar")
+        // Output dosyasını build klasörü altına veriyoruz, target değil
+        destinationDirectory.set(file("${project.buildDir}/libs"))
     }
 
     publishing {
+        publications {
+            shadow(MavenPublication) {
+                artifact tasks.shadowJar
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
+                pom {
+                    name = project.name
+                    description = 'Obliviate Inventories library'
+                }
+            }
+        }
+        
         repositories {
             maven {
                 name = "reposilite"
-                url = uri("https://repo.oyunzor.com/")
+                url = uri("https://repo.oyunzor.com/snapshots")
                 credentials {
                     username = env.fetchOrNull("REPOSILITE_USERNAME") ?: System.getenv("USERNAME")
                     password = env.fetchOrNull("REPOSILITE_TOKEN") ?: System.getenv("TOKEN")
@@ -51,10 +71,9 @@ subprojects {
             }
         }
     }
-
-    artifacts.archives(tasks.shadowJar)
-
-    tasks.shadowJar {
-        archiveFileName.set(project.name + "-" + project.version + ".jar")
+    
+    // Publish task'ının shadowJar'ı beklemesini sağlıyoruz
+    tasks.withType(PublishToMavenRepository) {
+        dependsOn tasks.shadowJar
     }
 }
