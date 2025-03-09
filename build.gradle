@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'mc.obliviate'
-version '4.1.13.2'
+version '4.1.13.3'
 compileJava.options.encoding = 'UTF-8'
 
 java {
@@ -41,6 +41,7 @@ subprojects {
     }
 
     tasks.shadowJar {
+        archiveClassifier.set("")
         archiveFileName.set(project.name + "-" + project.version + ".jar")
         // Output dosyasını build klasörü altına veriyoruz, target değil
         destinationDirectory.set(file("${project.buildDir}/libs"))

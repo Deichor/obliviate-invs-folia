@@ -2,6 +2,7 @@ package mc.obliviate.inventory;
 
 import mc.obliviate.inventory.util.NMSUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class ComponentIcon implements GuiIcon {
 
@@ -76,8 +76,15 @@ public class ComponentIcon implements GuiIcon {
 		final ItemMeta meta = icon.getItem().getItemMeta();
 		if (meta == null) return this;
 
-		meta.lore(lore);
+		// Lore içindeki her bir Component'in ITALIC durumunu kontrol edip gerektiğinde kapatıyoruz.
+		List<Component> fixedLore = lore.stream()
+				.map(line -> {
+					boolean isItalic = line.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE;
+					return line.decoration(TextDecoration.ITALIC, isItalic);
+				})
+				.toList();
 
+		meta.lore(fixedLore);
 		icon.getItem().setItemMeta(meta);
 		return this;
 	}
@@ -91,10 +98,13 @@ public class ComponentIcon implements GuiIcon {
 	@Nonnull
 	public ComponentIcon setName(final Component name) {
 		final ItemMeta meta = icon.getItem().getItemMeta();
-
 		if (meta == null) return this;
-		meta.displayName(name);
 
+		// Eğer name içinde ITALIC belirlenmişse onu kullan, belirlenmemişse false yap
+		boolean isItalic = name.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE;
+		Component fixedName = name.decoration(TextDecoration.ITALIC, isItalic);
+
+		meta.displayName(fixedName);
 		icon.getItem().setItemMeta(meta);
 		return this;
 	}
@@ -122,9 +132,17 @@ public class ComponentIcon implements GuiIcon {
 		if (meta == null) return this;
 
 		List<Component> list = meta.lore();
-		if (list != null) list.addAll(lore);
-		else list = lore;
+		if (list == null) list = new ArrayList<>(); // Eğer lore yoksa yeni liste oluştur
 
+		// Yeni eklenen lore'ları italik olup olmadığına göre düzenleyelim
+		List<Component> fixedLore = lore.stream()
+				.map(line -> {
+					boolean isItalic = line.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE;
+					return line.decoration(TextDecoration.ITALIC, isItalic);
+				})
+				.toList();
+
+		list.addAll(fixedLore); // Düzenlenmiş lore'ları ekle
 		meta.lore(list);
 
 		icon.getItem().setItemMeta(meta);

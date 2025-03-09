@@ -12,6 +12,8 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .env
+target
+.vscode
 # AWS User-specific
 .idea/**/aws.xml
 
